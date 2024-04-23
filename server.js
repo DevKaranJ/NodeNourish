@@ -34,10 +34,24 @@ const Data = mongoose.model('data', DataSchema);
 // Create an Express application
 const app = express();
 app.use(cors());
-// Create a route to fetch data
+// route to fetch data
 app.get('/data', async (req, res) => {
   const data = await Data.find(); // Fetch all data
   res.json(data);
+});
+
+// route to fetch a single data 
+app.get('/data/:id', async (req, res) => {
+  try {
+    const data = await Data.findById(req.params.id);
+    if (data) {
+      res.json(data);
+    } else {
+      res.status(404).json({ message: 'Data not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data' });
+  }
 });
 
 // Start the server
